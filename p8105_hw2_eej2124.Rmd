@@ -7,11 +7,12 @@ output: github_document
 
 ```{r message = F}
 library(tidyverse)
+library(readxl)
 ```
 
 # Problem 1 
 
-## Read and Clean the Data
+## Read and clean the csv data
 Read the data, clean the names, and retain line, station name, station latitude / longitude, routes served, entrance type, entry, vending, and ADA compliance. Converting entry variable from character to logical. 
 ```{r}
 subway_df = 
@@ -26,14 +27,40 @@ subway_df =
     )
   )
 ```
-
 The subway dataset includes `r colnames(subway_df)` variables. These variables are providing information about each NYC MTA subway station, including name, subway line, subway route, and whether the station entrance is ADA compliant. To clean the data, I used the `clean_name` function from the `janitor` package to convert all variable names to snake case, used the `select` function to retain only specific variable columns, and finally used the `case_match` function to convert the character variable `entry` to a logical variable. After cleaning, the dataset has `r ncol(subway_df)` columns and `r nrow(subway_df)` rows. These data are tidy. 
 
 # are these data tidy?
 
+## Questions
+### 1 
+
+### 2 
+
+### 3 
+
+## Reformatting data 
+
+# Problem 2 
+
+## Read and clean the Mr. Trash Wheel Excel data 
+
+```{r}
+trash_wheel_df = 
+  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+             sheet = "Mr. Trash Wheel") |> 
+  janitor::clean_names()
+```
+# Omit non data entries and rows that do not include dumpster-specific data, round number of sports balls using round() and convert to integer using as.integer 
+
+## Import, clean, and organize Professor Trash Wheel and Gwynnda data 
+```{r}
+
+```
 
 
+# Combine with Mr. Trash Wheel, do other stuff 
 
+# Problem 3 
 
 
 
