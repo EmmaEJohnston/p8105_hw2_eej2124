@@ -54,13 +54,34 @@ trash_wheel_df =
 
 ## Import, clean, and organize Professor Trash Wheel and Gwynnda data 
 ```{r}
-
+prof_trash_wheel_df = 
+  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+             sheet = "Professor Trash Wheel") |> 
+  janitor::clean_names()
 ```
 
+```{r}
+gwynnda_trash_wheel_df = 
+  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+             sheet = "Gwynns Falls Trash Wheel") |> 
+  janitor::clean_names()
+```
 
 # Combine with Mr. Trash Wheel, do other stuff 
 
 # Problem 3 
 
+## Import and clean baseline demographics data 
+```{r}
+baseline_df = 
+  read_csv("data/data_mci/MCI_baseline.csv", na = c("", ".", "NA")) |> 
+  janitor::clean_names()
+```
 
+## Import and clean biomarker values data
+```{r}
+biomarkers_df = 
+  read_csv("data/data_mci/mci_amyloid.csv", na = c("", ".", "NA")) |> 
+  janitor::clean_names()
+```
 
