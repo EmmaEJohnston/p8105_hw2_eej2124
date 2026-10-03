@@ -17,8 +17,14 @@ Read the data, clean the names, and retain line, station name, station latitude 
 subway_df = 
   read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na = c("", ".", "NA")) |> 
   janitor::clean_names() |> 
-  select(line:entry, vending, ada)
-  
+  select(line:entry, vending, ada) |> 
+  mutate(
+    entry = case_match(
+      entry, 
+      c("YES") ~ TRUE,
+      c("NO") ~ FALSE 
+    )
+  )
 ```
 
 
