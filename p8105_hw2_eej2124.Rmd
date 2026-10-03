@@ -34,21 +34,44 @@ The subway dataset includes `r colnames(subway_df)` variables. These variables a
 ## Questions
 ### 1 
 ```{r}
+distinct_stations = 
+  subway_df |> 
+  distinct(line, station_name) |> 
+  nrow()
 
+distinct_stations
 ```
+# This is wrong I think?  
+```{r}
+distinct_stations = 
+  tibble(
+    subway_df |> 
+  distinct(line, station_name, ada)
+  )
+
+nrow(distinct_stations)
+```
+There are 465 distinct stations in the MTA subway system. 
 
 ### 2 
 ```{r}
-filter(subway_df, ada == TRUE)
+filter(distinct_stations, ada == TRUE) |> 
+  nrow()
 ```
-Use answer to question 1 to answer this, must be distinct stations not just rows. 
+There are 84 ADA-compliant stations in the NYC MTA subway system. 
+
 ### 3 
+```{r}
+filter(subway_df, vending == "NO", entry == "TRUE") |> 
+  nrow()
+```
+69 station entrances or exits without vending allow entrance. 
 
 ## Reformatting data 
 ```{r}
 # mutate(
   # subway_df, route
-)
+# )
 ```
 
 
