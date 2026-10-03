@@ -27,6 +27,9 @@ subway_df =
   )
 ```
 
+The subway dataset includes `r colnames(subway_df)` variables. These variables are providing information about each NYC MTA subway station, including name, subway line, subway route, and whether the station entrance is ADA compliant. To clean the data, I used the `clean_name` function from the `janitor` package to convert all variable names to snake case, used the `select` function to retain only specific variable columns, and finally used the `case_match` function to convert the character variable `entry` to a logical variable. After cleaning, the dataset has `r ncol(subway_df)` columns and `r nrow(subway_df)` rows. These data are tidy. 
+
+# are these data tidy?
 
 
 
