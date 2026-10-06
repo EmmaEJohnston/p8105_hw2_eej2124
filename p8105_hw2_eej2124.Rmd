@@ -79,11 +79,9 @@ filter(subway_df, vending == "NO", entry == "TRUE") |>
 
 ## Read and clean the Mr. Trash Wheel Excel data 
 
-# HAVE TO USE NEW DATA SET 
-
 ```{r}
 trash_wheel_df = 
-  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+  read_excel("data/202610 Trash Wheel Collection Data.xlsx",
              sheet = "Mr. Trash Wheel") |> 
   janitor::clean_names()
 ```
@@ -92,15 +90,15 @@ trash_wheel_df =
 ## Import, clean, and organize Professor Trash Wheel and Gwynnda data 
 ```{r}
 prof_trash_wheel_df = 
-  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
+  read_excel("data/202610 Trash Wheel Collection Data.xlsx",
              sheet = "Professor Trash Wheel") |> 
   janitor::clean_names()
 ```
 
 ```{r}
 gwynnda_trash_wheel_df = 
-  read_excel("data/202509 Trash Wheel Collection Data.xlsx",
-             sheet = "Gwynns Falls Trash Wheel") |> 
+  read_excel("data/202610 Trash Wheel Collection Data.xlsx",
+             sheet = "Gwynnda the Good Wheel of the W") |> 
   janitor::clean_names()
 ```
 
