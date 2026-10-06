@@ -14,9 +14,10 @@ library(readxl)
 
 ## Read and clean the csv data
 Read the data, clean the names, and retain line, station name, station latitude / longitude, routes served, entrance type, entry, vending, and ADA compliance. Converting entry variable from character to logical. 
-```{r}
+```{r warning=FALSE}
 subway_df = 
-  read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", na = c("", ".", "NA")) |> 
+  read_csv("data/NYC_Transit_Subway_Entrance_And_Exit_Data.csv", 
+           na = c("", ".", "NA")) |> 
   janitor::clean_names() |> 
   select(line:entry, vending, ada) |> 
   mutate(
@@ -27,7 +28,7 @@ subway_df =
     )
   )
 ```
-The subway dataset includes `r colnames(subway_df)` variables. These variables are providing information about each NYC MTA subway station, including name, subway line, subway route, and whether the station entrance is ADA compliant. To clean the data, I used the `clean_name` function from the `janitor` package to convert all variable names to snake case, used the `select` function to retain only specific variable columns, and finally used the `case_match` function to convert the character variable `entry` to a logical variable. After cleaning, the dataset has `r ncol(subway_df)` columns and `r nrow(subway_df)` rows. These data are not tidy. 
+The subway dataset includes `r colnames(subway_df)` variables. These variables are providing information about each NYC MTA subway station, including name, subway line, subway route, and whether the station entrance is ADA compliant. To clean the data, I used the `clean_name()` function from the `janitor` package to convert all variable names to snake case, used the `select()` function to retain only specific variable columns, and finally used the `case_match()` function to convert the character variable `entry` to a logical variable. After cleaning, the dataset has `r ncol(subway_df)` columns and `r nrow(subway_df)` rows. These data are not tidy. 
 
 # are these data tidy?
 
@@ -94,9 +95,10 @@ mr_trash_wheel_df =
     plastic_bottles = as.numeric(plastic_bottles)
     )
 ```
-Import excel using read_excel from xl library, use range to not include first row (which includes figure of trashwheel and non-data entry) and last row (which includes sum), specify sheet. Clean names. select to remove extra columns. mutate to make integer (full number). Also had to make year and plastic bottles numeric to be able to bind later. Add additional column using mutate function to identify which df this is post joining. 
+I first imported the Trash Wheel dataset using `read_excel()` from `library(readxl)`. I specified which `sheet()` and `range()` to import so as to exclude the trash wheel figure in the first row and the column sums in the last row. I then cleaned my new data frame using `clean_names()` and used `select()` to remove extra columns. I next used the `mutate()` function to change the `sports_balls` values to whole number integers. I then changed the `year` and `plastic_bottles` variables to numeric, which allowed me to `bind_rows()` later on. Finally, I added an additional column to identify which trash wheel was responsible for which trash collection post-binding. 
 
 ## Import, clean, and organize Professor Trash Wheel and Gwynnda data 
+
 ```{r}
 prof_trash_wheel_df = 
   read_excel("data/202610 Trash Wheel Collection Data.xlsx",
@@ -123,7 +125,8 @@ gwynnda_trash_wheel_df =
     )
 ```
 
-# Combine with Mr. Trash Wheel, do other stuff 
+# Combine all of the trash wheel dataframes  
+
 ```{r}
 final_trash_wheel_df = 
   bind_rows(mr_trash_wheel_df, prof_trash_wheel_df, gwynnda_trash_wheel_df) |> 
@@ -136,21 +139,22 @@ final_trash_wheel_df =
     values_to = "trash_amount"
   ) 
 ```
-Removed homes powered, not dumpster specific. tidied data, trash type into own column, values into new column too. Did bind_rows to append the rows and create a new dataset. 
 
-This final dataset includes information on `r colnames(final_trash_wheel_df)`. The total weight of the trash collected by Professor Trash Wheel was ... The total number of cigarette butts collected by Gwynnda in June 2022 was ... 
+I created my final dataset using `bind_rows()`, which appended all the other data set rows together. n my final Trash Wheel dataset, I removed the `homes_powered` column as it is not dumpster specific. I then tidied the data by moving trash type into its own column and values showing the amount of trash into new column. 
+
+The final dataset includes information on `r colnames(final_trash_wheel_df)`. The total weight of the trash collected by Professor Trash Wheel was ... The total number of cigarette butts collected by Gwynnda in June 2022 was ... 
 
 --> How do we find the total weight of the trash in this format? Do I need to untidy? 
 
 # Problem 3 
 
 ## Import and clean baseline demographics data 
+
 ```{r}
 baseline_df = 
-  read_csv(
-    "data/data_mci/MCI_baseline.csv", 
-    skip = 1, 
-    na = c("", ".", "NA")) |> 
+  read_csv("data/data_mci/MCI_baseline.csv", 
+           skip = 1, 
+           na = c("", ".", "NA")) |> 
   janitor::clean_names() |> 
   mutate(
     sex = case_match(
@@ -166,7 +170,10 @@ baseline_df =
   )  |> 
   filter(age_at_onset > current_age|is.na(age_at_onset))
 ```
-First read the csv, have to skip first row (needless info) and NAs. then clean names. In order to change the encoding of sex and apoe4 to be character instead of numeric, use mutate and case_match function. To remove participants who do not meet the inclusion criteria (aka don't have MCI at baseline), filter for rows that have the age of onset older than the current age, which is the age at baseline OR participants who do not develop MCI at follow ups. This process excludes particpants who had MCI at the beginning of the study. `r nrow(baseline_df)` participants were recruited. Of those, `r nrow(filter(baseline_df, age_at_onset != "NA"))` participants developed MCI. Of the women in the study, `r nrow(filter(baseline_df, apoe4 == "apoe4_carrier", sex == "female"))` out of `r nrow(filter(baseline_df, sex == "female"))` women were APOE4 carriers. 
+
+I imported the baseline data using `read_csv()`, skipped the first row, and used `clean_names()`. In order to change the `sex` and `apoe4` encoding from numeric to character, I used `mutate()` and `case_match()` functions. To remove participants who do not meet the inclusion criteria (i.e. remove participants who had MCI at baseline), I used the `filter()` function to keep participants who have an age of onset older than the current age (the age at baseline) OR participants who did not develop MCI at follow ups. This allows us to exclude participants who had MCI at the beginning of the study.
+
+`r nrow(baseline_df)` participants were recruited to this study. Of those, `r nrow(filter(baseline_df, age_at_onset != "NA"))` participants developed MCI. Of the women in the study, `r nrow(filter(baseline_df, apoe4 == "apoe4_carrier", sex == "female"))` out of `r nrow(filter(baseline_df, sex == "female"))` women were APOE4 carriers. 
 
 ```{r}
 nrow(filter(baseline_df, age_at_onset != "NA"))
@@ -177,13 +184,45 @@ nrow(filter(baseline_df, sex == "female"))
 nrow(filter(baseline_df, apoe4 == "apoe4_carrier", sex == "female"))
 ```
 
-
 ## Import and clean biomarker values data
+
 ```{r}
 biomarkers_df = 
-  read_csv("data/data_mci/mci_amyloid.csv", na = c("", ".", "NA")) |> 
-  janitor::clean_names()
+  read_csv("data/data_mci/mci_amyloid.csv", 
+           skip = 1, 
+           na = c("", ".", "NA")) |> 
+  janitor::clean_names() |> 
+  pivot_longer(
+    baseline:time_8,
+    names_to = "years_elapsed", 
+    values_to = "amyloid_42_40_ratio"
+  ) |> 
+   mutate(
+    years_elapsed = case_match(
+      years_elapsed, 
+     "baseline" ~ 0, 
+     "time_2" ~ 2,
+     "time_4" ~ 4, 
+     "time_6" ~ 6,
+     "time_8" ~8
+    )
+  )
 ```
 
+I carried out a similar process of importing and cleaning for the `biomarkers_df` dataset. 
+In order to tidy the data, I used `pivot longer()` because important information, specifically the years elapsed since baseline, was stored in the column names, and biomarker values were stored in the data cells. I added a column called `years_elapsed` to detail the number of years elapsed since the baseline, and I moved the biomarker values into a new column called `amyloid_42_40_ratio`. Finally, I mutated the data in the `years_elapsed` column to numerical values of years that had passed using `case_match()`. 
 
+Is it okay to not use replace function?
+```{r}
+ # mutate(
+  #  years_elapsed = replace(years_elapsed, years_elapsed == "baseline", "0"),
+   # years_elapsed = replace(years_elapsed, years_elapsed == "time_2", "2"),
+    #years_elapsed = replace(years_elapsed, years_elapsed == "time_4", "4"),
+    #years_elapsed = replace(years_elapsed, years_elapsed == "time_6", "6"),
+    #years_elapsed = replace(years_elapsed, years_elapsed == "time_8", "8")
+  #)
+```
 
+# Do participants only appear in one of the two datasets? 
+
+# Combine the data 
