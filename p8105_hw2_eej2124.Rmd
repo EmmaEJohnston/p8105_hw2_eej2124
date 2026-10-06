@@ -94,7 +94,7 @@ mr_trash_wheel_df =
     plastic_bottles = as.numeric(plastic_bottles)
     )
 ```
-Import excel using read_excel from xl library, skip first row (which includes figure of trashwheel and non-data entry), specify sheet. Clean names. select to remove extra columns. mutate to make integer (full number). Also had to make year and plastic bottles numeric to be able to bind later. Add additional column using mutate function to identify which df this is post joining. 
+Import excel using read_excel from xl library, use range to not include first row (which includes figure of trashwheel and non-data entry) and last row (which includes sum), specify sheet. Clean names. select to remove extra columns. mutate to make integer (full number). Also had to make year and plastic bottles numeric to be able to bind later. Add additional column using mutate function to identify which df this is post joining. 
 
 ## Import, clean, and organize Professor Trash Wheel and Gwynnda data 
 ```{r}
