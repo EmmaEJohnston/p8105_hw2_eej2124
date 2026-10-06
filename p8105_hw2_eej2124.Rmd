@@ -136,9 +136,12 @@ final_trash_wheel_df =
     values_to = "trash_amount"
   ) 
 ```
-Removed homes powered, not dumpster specific. tidied data, trash type into own column, values into new column too.  
+Removed homes powered, not dumpster specific. tidied data, trash type into own column, values into new column too. Did bind_rows to append the rows and create a new dataset. 
 
-# Answer questions about the data
+This final dataset includes information on `r colnames(final_trash_wheel_df)`. The total weight of the trash collected by Professor Trash Wheel was ... The total number of cigarette butts collected by Gwynnda in June 2022 was ... 
+
+--> How do we find the total weight of the trash in this format? Do I need to untidy? 
+
 # Problem 3 
 
 ## Import and clean baseline demographics data 
@@ -163,7 +166,16 @@ baseline_df =
   )  |> 
   filter(age_at_onset > current_age|is.na(age_at_onset))
 ```
-First read the csv, have to skip first row (needless info) and NAs. then clean names. In order to change the encoding of sex and apoe4 to be character instead of numeric, use mutate and case_match function. To remove participants who do not meet the inclusion criteria (aka don't have MCI at baseline), filter for rows that are 
+First read the csv, have to skip first row (needless info) and NAs. then clean names. In order to change the encoding of sex and apoe4 to be character instead of numeric, use mutate and case_match function. To remove participants who do not meet the inclusion criteria (aka don't have MCI at baseline), filter for rows that have the age of onset older than the current age, which is the age at baseline OR participants who do not develop MCI at follow ups. This process excludes particpants who had MCI at the beginning of the study. `r nrow(baseline_df)` participants were recruited. Of those, `r nrow(filter(baseline_df, age_at_onset != "NA"))` participants developed MCI. Of the women in the study, `r nrow(filter(baseline_df, apoe4 == "apoe4_carrier", sex == "female"))` out of `r nrow(filter(baseline_df, sex == "female"))` women were APOE4 carriers. 
+
+```{r}
+nrow(filter(baseline_df, age_at_onset != "NA"))
+```
+
+```{r}
+nrow(filter(baseline_df, sex == "female"))
+nrow(filter(baseline_df, apoe4 == "apoe4_carrier", sex == "female"))
+```
 
 
 ## Import and clean biomarker values data
