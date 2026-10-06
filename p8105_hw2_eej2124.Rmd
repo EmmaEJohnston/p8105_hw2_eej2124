@@ -128,9 +128,15 @@ gwynnda_trash_wheel_df =
 final_trash_wheel_df = 
   bind_rows(mr_trash_wheel_df, prof_trash_wheel_df, gwynnda_trash_wheel_df) |> 
   janitor::clean_names() |> 
-  relocate(trashwheel) 
+  select(-homes_powered) |> 
+  relocate(trashwheel) |> 
+  pivot_longer(
+    plastic_bottles:sports_balls, 
+    names_to = "trash_type", 
+    values_to = "trash_amount"
+  ) 
 ```
-
+Removed homes powered, not dumpster specific. tidied data, trash type into own column, values into new column too.  
 
 # Answer questions about the data
 # Problem 3 
